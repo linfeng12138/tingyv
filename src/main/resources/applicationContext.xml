@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+	    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	    http://www.springframework.org/schema/tx
+        https://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd"
+       default-autowire="byName">
+    <description>这是描述信息只能存在一个可以不写</description>
+    <!--启用注解，写包路径，例如：vip.linfeng 多个包用逗号分隔，-->
+    <!--配置使用了注解配置的类的包路径，提升Spring容器对象的查找效率-->
+    <context:component-scan base-package="vip.linfeng.*.service"/>
+
+    <!--配置db.properties的加载路径-->
+    <context:property-placeholder location="classpath:db.properties"/>
+
+    <!--配置数据源bean-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="url" value="${db.url}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+    </bean>
+
+    <!--配置factory工厂的bean-->
+    <bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--自动注入了的话就无需再写了-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+        <!--简化路径-->
+        <property name="typeAliasesPackage" value="vip.linfeng.pojo"/>
+        <!--读取外部的MyBatis配置文件cfg-->
+        <property name="configLocation" value="classpath:mybatis.cfg.xml"/>
+        <!--配置分页查询-->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor"/>
+            </array>
+        </property>
+    </bean>
+
+    <!--配置Mapper扫描路径-->
+    <bean id="mapper" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--属性注入，比依赖注入速度慢，可以先完成db.properties的解析，官方建议使用-->
+        <property name="sqlSessionFactoryBeanName" value="factory"/>
+        <!--依赖注入，速度比较快，执行解析顺序会有问题，不推荐使用-->
+        <!--<property name="sqlSessionFactory" ref="factory"/>-->
+        <!--mapper包扫描路径-->
+        <property name="basePackage" value="vip.linfeng.*.mapper"/>
+    </bean>
+
+    <!--事务管理器-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--数据源配置的哪个数据库就是对哪个数据库的事务管理-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--事务通知类，具体说明：进行什么样的管理-->
+    <tx:advice transaction-manager="txManager" id="txAdvice">
+        <tx:attributes>
+            <!--*是所有方法都使用默认的处理方案-->
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--配置AOP：对哪些方法进行事务管理-->
+    <aop:config>
+        <!--第一个* 所有service实现类 第二个* service实现类的所有方法 ..任意参数-->
+        <aop:pointcut id="aopPoint" expression="execution(* vip.linfeng.*.service.impl.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="aopPoint"/>
+    </aop:config>
+
+</beans>

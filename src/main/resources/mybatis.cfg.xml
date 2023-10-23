@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!--启用log4j日志(log4j2无需配置)-->
+        <!--<setting name="logImpl" value="LOG4J"/>-->
+        <!--设置下划线转小驼峰-->
+        <!--        <setting name="mapUnderscoreToCamelCase" value="true"/>-->
+        <!--配置全局延迟加载（懒加载）-->
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <!--开启二级缓存，记得给实体序列化Serializable-->
+        <!--<setting name="cacheEnabled" value="true"/>-->
+    </settings>
+    <!--typeAlias标签:统一配置实体类的别名,简化XXXMapper.xml中实体类的路径-->
+    <!--    <typeAliases>-->
+    <!--        &lt;!&ndash;        <typeAlias type="vip.linfeng.pojo.Student" alias="stu" />&lt;!&ndash;给指定的类起别名&ndash;&gt;&ndash;&gt;-->
+    <!--        <package name="vip.linfeng.pojo"/>&lt;!&ndash;该包下的类名即别名,不区分大小写&ndash;&gt;-->
+    <!--    </typeAliases>-->
+</configuration>

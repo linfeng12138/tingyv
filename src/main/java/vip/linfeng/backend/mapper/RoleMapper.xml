@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vip.linfeng.backend.mapper.RoleMapper">
+    <resultMap id="roleMap" type="role">
+        <id column="rid" property="rid"/>
+        <result column="rname" property="rname"/>
+        <result column="rdesc" property="rdesc"/>
+    </resultMap>
+    <select id="selectRoleByRole" resultType="vip.linfeng.pojo.Role">
+        select
+            rid,
+            rname,
+            rdesc
+        from
+            t_role
+        <where>
+            <if test="rname!=null and rname!=''">
+                <bind name="rname" value="'%' + rname + '%'"/>
+                and rname like #{rname}
+            </if>
+        </where>
+    </select>
+
+
+    <!--主键回填-->
+    <insert id="insertRole" keyProperty="rid" useGeneratedKeys="true">
+        <!--
+            selectKey 为insert的子标签，其它标签内无法使用
+            作用：查询自增主键的值
+            keyProperty：将查询结果放入到新增方法参数的哪个属性中
+            order：selectKey中的sql是在insert之前(BEFORE)执行还是之后执行(AFTER)
+        -->
+<!--        <selectKey keyProperty="rid" order="AFTER">-->
+<!--            &lt;!&ndash;mysql全局变量，存储自增的主键值&ndash;&gt;-->
+<!--            select @@identity-->
+<!--        </selectKey>-->
+        insert into t_role values (default, #{rname}, #{rdesc})
+    </insert>
+
+
+    <insert id="insertRoleMenu">
+        insert into t_role_menu values
+        <foreach collection="param2" item="id" separator=",">
+            (#{param1}, #{id})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRoleMneuByRid">
+        delete from t_role_menu where rid=#{rid}
+    </delete>
+
+    <update id="updateRoleById">
+        update t_role set rname=#{rname}, rdesc=#{rdesc} where rid = #{rid}
+    </update>
+
+    <delete id="deleteRoleByRid">
+        delete from t_role where rid = #{rid}
+    </delete>
+</mapper>

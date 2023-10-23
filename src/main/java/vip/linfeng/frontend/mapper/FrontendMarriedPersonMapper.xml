@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vip.linfeng.frontend.mapper.FrontendMarriedPersonMapper">
+
+    <insert id="insertMarriedPerson">
+        insert into t_married_person
+        values(default, #{pname}, #{ppwd}, #{pphone}, #{pmail}, #{marrydate}, #{regdate}, #{status})
+    </insert>
+</mapper>

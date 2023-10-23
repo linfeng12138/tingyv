@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vip.linfeng.frontend.mapper.ValidateCodeMapper">
+    <select id="selectCountByEmail" resultType="vip.linfeng.pojo.ValidateCode">
+        select * from t_validate_code where vmail=#{vmail}
+    </select>
+
+    <insert id="insertVaalidateCode">
+        insert into t_validate_code values(default, #{vcode}, #{vtime}, #{vmail})
+    </insert>
+
+    <delete id="deleteValidateCodyByMail">
+        delete from t_validate_code where vmail=#{mail}
+    </delete>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vip.linfeng.backend.mapper.CompanyMapper">
+    <sql id="companySelect">
+        select
+            cid,
+            cpwd,
+            cname,
+            ceo,
+            cphone,
+            cmail,
+            starttime,
+            status,
+            cnum
+        from
+            t_company
+    </sql>
+
+    <resultMap id="companyMap" type="company">
+        <id property="cid" column="cid"/>
+        <result property="status" column="status"/>
+        <result property="starttime" column="starttime"/>
+        <result property="ceo" column="ceo"/>
+        <result property="cmail" column="cmail"/>
+        <result property="cname" column="cname"/>
+        <result property="cnum" column="cnum"/>
+        <result property="cphone" column="cphone"/>
+        <result property="cpwd" column="cpwd"/>
+    </resultMap>
+    <select id="selectCompanyByCompany" resultMap="companyMap">
+        <include refid="companySelect"/>
+        <where>
+            <if test="cname != null and cname != ''">
+                <bind name="cname" value="'%' + cname + '%'"/>
+                and cname like #{cname}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCompanyById" resultMap="companyMap">
+        <include refid="companySelect"/>
+        where cid = #{cid}
+    </select>
+
+
+    <insert id="insertCompany">
+        insert into t_company value(default, #{cpwd}, #{cname}, #{ceo}, #{cphone}, #{cmail}, now(), '正常', 0)
+    </insert>
+
+
+    <update id="updateCompanyById">
+        update
+            t_company
+        set
+            cname=#{cname},
+            ceo=#{ceo},
+            cphone=#{cphone},
+            cmail=#{cmail},
+            cpwd=#{cpwd}
+        where
+            cid=#{cid}
+    </update>
+
+    <update id="updateStatusById">
+        update
+            t_company
+        set
+            status=#{status}
+        where
+            cid=#{cid}
+    </update>
+</mapper>

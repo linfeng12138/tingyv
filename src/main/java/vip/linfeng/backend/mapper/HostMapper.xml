@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vip.linfeng.backend.mapper.HostMapper">
+
+    <sql id="hostSelect">
+        select
+            hid,
+            hname,
+            hpwd,
+            hphone,
+            starttime,
+            status,
+            strong,
+            num,
+            hpid,
+            hpstart,
+            hpstart_beigindate,
+            hpstart_enddate,
+            hp_order_power,
+            hpstart_begintime,
+            hpstart_endtime,
+            hpdiscount,
+            hp_dis_starttime,
+            hp_dis_endtime,
+            hpprice,
+            hcosts,
+            hostid
+        from
+            t_host h
+    </sql>
+
+    <resultMap id="hostMap" type="host">
+        <id property="hid" column="hid"/>
+        <result property="hname" column="hname"/>
+        <result property="hpwd" column="hpwd"/>
+        <result property="hphone" column="hphone"/>
+        <result property="starttime" column="starttime"/>
+        <result property="status" column="status"/>
+        <result property="strong" column="strong"/>
+        <result property="num" column="num"/>
+        <collection property="hostPower" javaType="vip.linfeng.pojo.HostPower" ofType="vip.linfeng.pojo.HostPower">
+            <id column="hpid" property="hpid" />
+            <result column="hpstart" property="hpstart" />
+            <result column="hpstart_beigindate" property="hpstartBeigindate" />
+            <result column="hpstart_enddate" property="hpstartEnddate" />
+            <result column="hp_order_power" property="hpOrderPower" />
+            <result column="hpstart_begintime" property="hpstartBegintime" />
+            <result column="hpstart_endtime" property="hpstartEndtime" />
+            <result column="hpdiscount" property="hpdiscount" />
+            <result column="hp_dis_starttime" property="hpDisStarttime" />
+            <result column="hp_dis_endtime" property="hpDisEndtime" />
+            <result column="hpprice" property="hpprice" />
+            <result column="hcosts" property="hcosts" />
+            <result column="hostid" property="hostid" />
+        </collection>
+    </resultMap>
+
+    <select id="selectHostInfoMapper" resultMap="hostMap">
+        <include refid="hostSelect"/>
+        left join t_host_power p
+        on h.hid = p.hostid
+        <where>
+            <if test="hname != null and hname != ''">
+                <bind name="hname" value="'%' + hname + '%'"/>
+                and h.hname like #{hname}
+            </if>
+            <if test="status != null and status != ''">
+                and h.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateStatusMapper">
+        update
+            t_host
+        set
+            status=#{status}
+        where
+            hid=#{hid}
+    </update>
+
+    <insert id="insertHost" useGeneratedKeys="true" keyProperty="hid">
+        insert into t_host
+        values(
+            default,
+            #{hname},
+            #{hpwd},
+            #{hphone},
+            now(),
+            '正常',
+            10,
+            0
+        )
+    </insert>
+</mapper>

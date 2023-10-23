@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vip.linfeng.backend.mapper.HostPowerMapper">
+
+    <update id="updateHpstartMapper">
+        update
+            t_host_power
+        set
+            hpstart = #{param2}
+        where
+            hostid = #{param1}
+    </update>
+
+    <insert id="insertHostPowerMapper">
+        insert into t_host_power
+            (hpid,
+            hpstart,
+            hpstart_beigindate,
+            hpstart_enddate,
+            hp_order_power,
+            hpstart_begintime,
+            hpstart_endtime,
+            hpdiscount,
+            hp_dis_starttime,
+            hp_dis_endtime,
+            hpprice,
+            hcosts,
+            hostid)
+        values
+            (default,
+            '否',
+            now(),
+            now(),
+            '否',
+            now(),
+            now(),
+            9,
+            now(),
+            now(),
+            666.0,
+            100.0,
+            #{hid})
+    </insert>
+</mapper>

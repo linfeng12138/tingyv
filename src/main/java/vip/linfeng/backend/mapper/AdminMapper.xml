@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vip.linfeng.backend.mapper.AdminMapper">
+
+    <resultMap id="adminMap" type="admin">
+        <id column="aid" property="aid"/>
+        <result property="aname" column="aname"/>
+        <result property="aphone" column="aphone"/>
+        <result property="apwd" column="apwd"/>
+        <result property="starttime" column="starttime"/>
+    </resultMap>
+
+    <select id="selectAdminByAdmin" resultMap="adminMap">
+        select
+            aid,
+            aname,
+            apwd,
+            aphone,
+            starttime
+        from
+            t_admin
+        where
+            aname = #{aname} and apwd = #{apwd}
+    </select>
+</mapper>
